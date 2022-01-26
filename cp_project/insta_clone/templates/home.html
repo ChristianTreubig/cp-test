@@ -2,4 +2,9 @@
 
 {% block content %}
     This is the home page.
+    {% for photo in photos_from_followings %}
+        <div>
+            <img src="{{ photo.image.url }}" />
+        </div>
+    {% endfor %}
 {% endblock content %}

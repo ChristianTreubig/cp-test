@@ -13,7 +13,16 @@ from .models import Follow, Photo
 
 @login_required()
 def home(request):
-    return render(request, 'home.html')
+    followings = Follow.objects.filter(from_user=request.user).values_list('to_user', flat=True)
+    photos_from_followings = Photo.objects.filter(user__in=followings).order_by('-created_at')
+
+    return render(
+        request,
+        'home.html',
+        context={
+            'photos_from_followings': photos_from_followings,
+        }
+    )
 
 
 @login_required()
