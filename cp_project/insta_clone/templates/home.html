@@ -4,10 +4,20 @@
     This is the home page.
     {% for photo in photos_from_followings %}
         <div>
+            <div>
+                <a href="{% url 'profile' photo.user.id %}">{{ photo.user.username }}</a>
+            </div>
             <img src="{{ photo.image.url }}" />
             {% for comment in photo.comments_with_posters.all %}
                 <div>{{ comment.poster.username }} {{ comment.text }}</div>
             {% endfor %}
+
+            <form method="post" action="{% url 'post_comment' photo.id %}">
+                {% csrf_token %}
+                <input type="text" name="comment">
+                <input type="hidden" name="redirect_view" value="home">
+                <input type="submit" value="Comment">
+            </form>
         </div>
     {% endfor %}
 {% endblock content %}

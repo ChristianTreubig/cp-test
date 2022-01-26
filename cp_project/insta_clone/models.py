@@ -31,4 +31,4 @@ class Comment(models.Model):
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('-created_at', )
+        ordering = ('created_at', )

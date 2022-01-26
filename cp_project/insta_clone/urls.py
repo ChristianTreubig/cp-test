@@ -12,6 +12,7 @@ urlpatterns = [
     path('unfollow/<int:profile_user_id>/', views.unfollow, name='unfollow'),
     path('search_users', views.search_users, name='search_users'),
     path('photo_upload', views.PhotoUploadView.as_view(), name='photo_upload'),
+    path('post_comment/<int:photo_id>/', views.post_comment, name='post_comment'),
     path('sign_up', views.SignupView.as_view(), name='sign_up'),
     path('logout', LogoutView.as_view(), name='logout'),
 ]

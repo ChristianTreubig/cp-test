@@ -8,13 +8,13 @@ from django.shortcuts import render, redirect, reverse
 from django.db.models import Q, Count
 
 from .forms import UserCreationFormCustom, PhotoUploadForm
-from .models import Follow, Photo
+from .models import Follow, Photo, Comment
 
 
 @login_required()
 def home(request):
     followings = Follow.objects.filter(from_user=request.user).values_list('to_user', flat=True)
-    photos_from_followings = Photo.objects.filter(user__in=followings).order_by('-created_at')
+    photos_from_followings = Photo.objects.filter(user__in=followings).order_by('-created_at').select_related('user')
 
     return render(
         request,
@@ -87,6 +87,23 @@ def search_users(request):
             'users': users,
         },
     )
+
+
+@login_required()
+def post_comment(request, photo_id):
+    comment_text = request.POST.get('comment')
+    photo = Photo.objects.get(id=photo_id)
+
+    Comment.objects.create(
+        text=comment_text,
+        poster=request.user,
+        photo=photo,
+    )
+
+    redirect_view = request.POST.get('redirect_view')
+    redirect_kwargs = {'profile_user_id': photo.user_id} if redirect_view=='profile' else {}
+
+    return redirect(redirect_view, **redirect_kwargs)
 
 
 class SetRequestOnFormMixin:
