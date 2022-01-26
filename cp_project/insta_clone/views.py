@@ -32,6 +32,26 @@ def my_profile(request):
     )
 
 
+# TODO: make each search result a link to that user's profile
+@login_required()
+def search_users(request):
+    search_string = request.GET.get('search_string')
+
+    users = User.objects.filter(
+        Q(username__icontains=search_string) |
+        Q(first_name__icontains=search_string) |
+        Q(last_name__icontains=search_string)
+    ).exclude(id=request.user.id)
+
+    return render(
+        request,
+        'search_results.html',
+        context={
+            'users': users,
+        },
+    )
+
+
 class SignupView(CreateView):
     model = User
     form_class = UserCreationFormCustom

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    These are the search results.
+    {% for user in users %}
+        <div>{{ user.username }} - {{ user.first_name }} {{ user.last_name }}</div>
+    {% empty %}
+        <div>No results.</div>
+    {% endfor %}
+{% endblock content %}
