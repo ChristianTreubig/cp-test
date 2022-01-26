@@ -125,26 +125,19 @@ class PhotoUploadView(LoginRequiredMixin, SetRequestOnFormMixin, CreateView):
 class SignupView(SetRequestOnFormMixin, CreateView):
     model = User
     form_class = UserCreationFormCustom
-    template_name = 'signup.html'
+    template_name = 'registration/signup.html'
     success_url = reverse_lazy('home')
 
 
 
 # move signup.html to the templates/registration folder
 
-# home page should have feed of photos of people you follow
-
 # create middleware to require login on all pages (except signup/login/logout)
-
-# reference trwibc (on flash drive) for file uploads
-# Photos should be its own model (keys to User)
 
 # add static assets
     # include collecstatic command in README
         # prob don't need this
 
-# write tests
-    # note how to run them in README
 
 
 
