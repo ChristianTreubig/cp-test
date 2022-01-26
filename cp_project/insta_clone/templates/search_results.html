@@ -2,8 +2,12 @@
 
 {% block content %}
     These are the search results.
-    {% for user in users %}
-        <div>{{ user.username }} - {{ user.first_name }} {{ user.last_name }}</div>
+    {% for searched_user in users %}
+        <div>
+            <a href="{% url 'profile' searched_user.id %}">
+                {{ searched_user.username }} - {{ searched_user.first_name }} {{ searched_user.last_name }}
+            </a>
+        </div>
     {% empty %}
         <div>No results.</div>
     {% endfor %}

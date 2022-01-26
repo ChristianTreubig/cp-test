@@ -1,5 +1,5 @@
 <div><a href="{% url 'home' %}">Home</a></div>
-<div><a href="{% url 'my_profile' %}">My Profile</a></div>
+<div><a href="{% url 'profile' request.user.id %}">My Profile</a></div>
 <div>
     <div>Search by username, first name, or last name</div>
     <form action="{% url 'search_users' %}" method="GET">

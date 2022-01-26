@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    This is my profile.
+    {% if request.user.id == profile_user.id %}
+        This is my profile.
+    {% else %}
+        This is the profile of {{ profile_user }}.
+    {% endif %}
+
     <div>Following: {{ follow_counts.following }}</div>
     <div>Followers: {{ follow_counts.followers }}</div>
 {% endblock content %}

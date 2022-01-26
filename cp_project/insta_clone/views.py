@@ -16,23 +16,24 @@ def home(request):
 
 
 @login_required()
-def my_profile(request):
+def profile(request, user_id):
+    user = User.objects.get(id=user_id)
+
     follow_counts = Follow.objects.aggregate(
-        following=Count('pk', filter=Q(from_user=request.user)),
-        followers=Count('pk', filter=Q(to_user=request.user)),
+        following=Count('pk', filter=Q(from_user=user)),
+        followers=Count('pk', filter=Q(to_user=user)),
     )
 
-    # TODO: other user profiles will probably share same template
     return render(
         request,
-        'my_profile.html',
+        'profile.html',
         context={
+            'profile_user': user,
             'follow_counts': follow_counts,
         },
     )
 
 
-# TODO: make each search result a link to that user's profile
 @login_required()
 def search_users(request):
     search_string = request.GET.get('search_string')
