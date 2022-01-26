@@ -47,8 +47,9 @@ class SignupView(CreateView):
 
 
 
-# treubig
+# treubig/treubig2/...
 # christian.treubig@gmail.com
 # casepeer
 
 # from django.contrib.auth.models import User
+# from insta_clone.models import Follow
