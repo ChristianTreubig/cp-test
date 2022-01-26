@@ -33,6 +33,9 @@
     {% for photo in photos %}
         <div>
             <img src="{{ photo.image.url }}" />
+            {% for comment in photo.comments_with_posters.all %}
+                <div>{{ comment.poster.username }} {{ comment.text }}</div>
+            {% endfor %}
         </div>
     {% endfor %}
 {% endblock content %}

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
-from .models import Photo
+from .models import Photo, Comment
 
 
 class UserCreationFormCustom(UserCreationForm):
@@ -39,15 +39,23 @@ class PhotoUploadForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.request = request
 
+    comment = forms.CharField()
+
     class Meta:
         model = Photo
-        fields = ['image']
+        fields = ('image', 'comment')
 
     def save(self, commit=True):
         photo = super().save(commit=False)
         photo.user = self.request.user
+        comment_text = self.cleaned_data['comment']
 
         if commit:
             photo.save()
+            Comment.objects.create(
+                text=comment_text,
+                poster=self.request.user,
+                photo=photo,
+            )
 
         return photo
