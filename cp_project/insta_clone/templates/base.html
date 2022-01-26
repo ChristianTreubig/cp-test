@@ -1,0 +1,7 @@
+<div>{{ request.user.username }} is logged in.</div>
+<div><a href="{% url 'home' %}">Home</a></div>
+<div><a href="{% url 'my_profile' %}">My Profile</a></div>
+<div><a href="{% url 'logout' %}">Logout</a></div>
+
+{% block content %}
+{% endblock content %}

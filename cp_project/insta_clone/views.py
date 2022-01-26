@@ -4,13 +4,32 @@ from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.db.models import Q, Count
 
 from .forms import UserCreationFormCustom
+from .models import Follow
 
 
 @login_required()
 def home(request):
-    return render(request, "home.html")
+    return render(request, 'home.html')
+
+
+@login_required()
+def my_profile(request):
+    follow_counts = Follow.objects.aggregate(
+        following=Count('pk', filter=Q(from_user=request.user)),
+        followers=Count('pk', filter=Q(to_user=request.user)),
+    )
+
+    # TODO: other user profiles will probably share same template
+    return render(
+        request,
+        'my_profile.html',
+        context={
+            'follow_counts': follow_counts,
+        },
+    )
 
 
 class SignupView(CreateView):
@@ -33,7 +52,7 @@ class SignupView(CreateView):
 
 # for the search, one text entry field; Q objects to do or on all the User fields
 
-# create middleware to require login on all pages (except signup/login)
+# create middleware to require login on all pages (except signup/login/logout)
 
 # reference trwibc (on flash drive) for file uploads
 # Photos should be its own model (keys to User)
