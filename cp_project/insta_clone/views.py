@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q, Count
 
 from .forms import UserCreationFormCustom
@@ -16,22 +16,45 @@ def home(request):
 
 
 @login_required()
-def profile(request, user_id):
-    user = User.objects.get(id=user_id)
+def profile(request, profile_user_id):
+    profile_user = User.objects.get(id=profile_user_id)
 
     follow_counts = Follow.objects.aggregate(
-        following=Count('pk', filter=Q(from_user=user)),
-        followers=Count('pk', filter=Q(to_user=user)),
+        following=Count('pk', filter=Q(from_user=profile_user)),
+        followers=Count('pk', filter=Q(to_user=profile_user)),
     )
+
+    try:
+        Follow.objects.get(from_user=request.user, to_user=profile_user)
+        request_user_follows_profile_user = True
+    except Follow.DoesNotExist:
+        request_user_follows_profile_user = False
 
     return render(
         request,
         'profile.html',
         context={
-            'profile_user': user,
+            'profile_user': profile_user,
             'follow_counts': follow_counts,
+            'request_user_follows_profile_user': request_user_follows_profile_user,
         },
     )
+
+
+@login_required()
+def follow(request, profile_user_id):
+    user_to_follow = User.objects.get(id=profile_user_id)
+    Follow.objects.create(from_user=request.user, to_user=user_to_follow)
+
+    return redirect('profile', profile_user_id=profile_user_id)
+
+
+@login_required()
+def unfollow(request, profile_user_id):
+    follow = Follow.objects.get(from_user=request.user, to_user=profile_user_id)
+    follow.delete()
+
+    return redirect('profile', profile_user_id=profile_user_id)
 
 
 @login_required()
@@ -66,12 +89,9 @@ class SignupView(CreateView):
 
 
 
+# move signup.html to the templates/registration folder
 
 # home page should have feed of photos of people you follow
-
-# M2M for follower relations probably
-
-# for the search, one text entry field; Q objects to do or on all the User fields
 
 # create middleware to require login on all pages (except signup/login/logout)
 
@@ -80,6 +100,7 @@ class SignupView(CreateView):
 
 # add static assets
     # include collecstatic command in README
+        # prob don't need this
 
 # write tests
     # note how to run them in README

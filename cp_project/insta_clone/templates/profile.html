@@ -4,7 +4,24 @@
     {% if request.user.id == profile_user.id %}
         This is my profile.
     {% else %}
-        This is the profile of {{ profile_user }}.
+        <div>This is the profile of {{ profile_user }}.</div>
+        {% if request_user_follows_profile_user %}
+            <div>You follow this profile.</div>
+            <div>
+                <form method="post" action="{% url 'unfollow' profile_user.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Unfollow">
+                </form>
+            </div>
+        {% else %}
+            <div>You don't follow this profile.</div>
+            <div>
+                <form method="post" action="{% url 'follow' profile_user.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Follow">
+                </form>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div>Following: {{ follow_counts.following }}</div>
