@@ -3,6 +3,9 @@
 {% block content %}
     {% if request.user.id == profile_user.id %}
         This is my profile.
+        <div>
+            <a href="{% url 'photo_upload' %}">Upload a new photo</a>
+        </div>
     {% else %}
         <div>This is the profile of {{ profile_user }}.</div>
         {% if request_user_follows_profile_user %}
@@ -26,4 +29,10 @@
 
     <div>Following: {{ follow_counts.following }}</div>
     <div>Followers: {{ follow_counts.followers }}</div>
+
+    {% for photo in photos %}
+        <div>
+            <img src="{{ photo.image.url }}" />
+        </div>
+    {% endfor %}
 {% endblock content %}

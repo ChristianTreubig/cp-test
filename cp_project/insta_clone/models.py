@@ -13,3 +13,9 @@ class Follow(models.Model):
 
     class Meta:
         unique_together = ('from_user', 'to_user')
+
+
+class Photo(models.Model):
+    image = models.ImageField(upload_to='images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

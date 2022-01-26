@@ -1,13 +1,14 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.db.models import Q, Count
 
-from .forms import UserCreationFormCustom
-from .models import Follow
+from .forms import UserCreationFormCustom, PhotoUploadForm
+from .models import Follow, Photo
 
 
 @login_required()
@@ -30,6 +31,8 @@ def profile(request, profile_user_id):
     except Follow.DoesNotExist:
         request_user_follows_profile_user = False
 
+    photos = Photo.objects.filter(user=profile_user).order_by('-created_at')
+
     return render(
         request,
         'profile.html',
@@ -37,6 +40,7 @@ def profile(request, profile_user_id):
             'profile_user': profile_user,
             'follow_counts': follow_counts,
             'request_user_follows_profile_user': request_user_follows_profile_user,
+            'photos': photos,
         },
     )
 
@@ -76,16 +80,27 @@ def search_users(request):
     )
 
 
-class SignupView(CreateView):
-    model = User
-    form_class = UserCreationFormCustom
-    template_name = 'signup.html'
-    success_url = reverse_lazy('home')
-
+class SetRequestOnFormMixin:
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
         form_kwargs['request'] = self.request
         return form_kwargs
+
+
+class PhotoUploadView(LoginRequiredMixin, SetRequestOnFormMixin, CreateView):
+    model = Photo
+    form_class = PhotoUploadForm
+    template_name = 'photo_upload.html'
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'profile_user_id': self.request.user.id})
+
+
+class SignupView(SetRequestOnFormMixin, CreateView):
+    model = User
+    form_class = UserCreationFormCustom
+    template_name = 'signup.html'
+    success_url = reverse_lazy('home')
 
 
 

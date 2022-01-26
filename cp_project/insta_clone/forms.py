@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
+from .models import Photo
+
 
 class UserCreationFormCustom(UserCreationForm):
     def __init__(self, request, *args, **kwargs):
@@ -30,3 +32,22 @@ class UserCreationFormCustom(UserCreationForm):
             login(self.request, auth_user)
 
         return user
+
+
+class PhotoUploadForm(forms.ModelForm):
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
+    class Meta:
+        model = Photo
+        fields = ['image']
+
+    def save(self, commit=True):
+        photo = super().save(commit=False)
+        photo.user = self.request.user
+
+        if commit:
+            photo.save()
+
+        return photo

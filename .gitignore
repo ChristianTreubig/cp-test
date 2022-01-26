@@ -2,3 +2,4 @@
 *.xml
 *.sqlite3
 .idea/
+media/
