@@ -2,12 +2,12 @@
 
 {% block content %}
     {% if request.user.id == profile_user.id %}
-        This is my profile.
+        <h2>My Profile</h2>
         <div>
             <a href="{% url 'photo_upload' %}">Upload a new photo</a>
         </div>
     {% else %}
-        <div>This is the profile of {{ profile_user }}.</div>
+        <h2>{{ profile_user.first_name }} {{ profile_user.last_name }} ({{ profile_user.username }})</h2>
         {% if request_user_follows_profile_user %}
             <div>You follow this profile.</div>
             <div>
@@ -31,10 +31,10 @@
     <div>Followers: {{ follow_counts.followers }}</div>
 
     {% for photo in photos %}
-        <div>
+        <div class="photo_container">
             <img src="{{ photo.image.url }}" />
             {% for comment in photo.comments_with_posters.all %}
-                <div>{{ comment.poster.username }} {{ comment.text }}</div>
+                <div><a href="{% url 'profile' comment.poster_id %}">{{ comment.poster.username }}</a> {{ comment.text }}</div>
             {% endfor %}
 
             <form method="post" action="{% url 'post_comment' photo.id %}">

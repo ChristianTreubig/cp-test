@@ -1,15 +1,22 @@
-<div><a href="{% url 'home' %}">Home</a></div>
-<div><a href="{% url 'profile' request.user.id %}">My Profile</a></div>
-<div>
-    <div>Search by username, first name, or last name</div>
-    <form action="{% url 'search_users' %}" method="GET">
-        <input name="search_string" type="text" placeholder="Search..." id="search_users">
-        <button type="submit">Search</button>
-    </form>
+{% extends "base_global.html" %}
+
+{% block content_from_global_base %}
+
+<div id="header">
+    <div class="header_item"><a href="{% url 'home' %}">Home</a></div>
+    <div class="header_item"><a href="{% url 'profile' request.user.id %}">My Profile</a></div>
+    <div class="header_item">
+        <div>Search by username, first name, or last name</div>
+        <form action="{% url 'search_users' %}" method="GET">
+            <input name="search_string" type="text" placeholder="Search..." id="search_users">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div class="header_item"><b>{{ request.user.username }}</b> is logged in.</div>
+    <div class="header_item"><a href="{% url 'logout' %}">Logout</a></div>
 </div>
-<div>{{ request.user.username }} is logged in.</div>
-<div><a href="{% url 'logout' %}">Logout</a></div>
-<br>
 
 {% block content %}
 {% endblock content %}
+
+{% endblock content_from_global_base %}

@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    This is the home page.
+    <h2>Home Feed</h2>
     {% for photo in photos_from_followings %}
-        <div>
+        <div class="photo_container">
             <div>
-                <a href="{% url 'profile' photo.user.id %}">{{ photo.user.username }}</a>
+                <a href="{% url 'profile' photo.user_id %}">{{ photo.user.username }}</a>
             </div>
             <img src="{{ photo.image.url }}" />
             {% for comment in photo.comments_with_posters.all %}
-                <div>{{ comment.poster.username }} {{ comment.text }}</div>
+                <div><a href="{% url 'profile' comment.poster_id %}">{{ comment.poster.username }}</a> {{ comment.text }}</div>
             {% endfor %}
 
             <form method="post" action="{% url 'post_comment' photo.id %}">
