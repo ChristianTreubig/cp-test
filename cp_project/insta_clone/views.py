@@ -107,7 +107,7 @@ class SetRequestOnFormMixin:
         return form_kwargs
 
 
-class PhotoUploadView(LoginRequiredMixin, SetRequestOnFormMixin, CreateView):
+class PhotoUploadView(SetRequestOnFormMixin, CreateView):
     model = Photo
     form_class = PhotoUploadForm
     template_name = 'photo_upload.html'
