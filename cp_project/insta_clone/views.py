@@ -12,7 +12,7 @@ from .models import Follow, Photo, Comment
 
 
 def home(request):
-    followings = Follow.objects.filter(from_user=request.user).values_list('to_user', flat=True)
+    followings = request.user.following.all().values_list('to_user', flat=True)
     photos_from_followings = Photo.objects.filter(user__in=followings).order_by('-created_at').select_related('user')
 
     return render(
