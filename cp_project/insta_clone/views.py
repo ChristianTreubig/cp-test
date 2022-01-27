@@ -11,7 +11,6 @@ from .forms import UserCreationFormCustom, PhotoUploadForm
 from .models import Follow, Photo, Comment
 
 
-@login_required()
 def home(request):
     followings = Follow.objects.filter(from_user=request.user).values_list('to_user', flat=True)
     photos_from_followings = Photo.objects.filter(user__in=followings).order_by('-created_at').select_related('user')
@@ -25,7 +24,6 @@ def home(request):
     )
 
 
-@login_required()
 def profile(request, profile_user_id):
     profile_user = User.objects.get(id=profile_user_id)
 
@@ -54,7 +52,6 @@ def profile(request, profile_user_id):
     )
 
 
-@login_required()
 def follow(request, profile_user_id):
     user_to_follow = User.objects.get(id=profile_user_id)
     Follow.objects.create(from_user=request.user, to_user=user_to_follow)
@@ -62,7 +59,6 @@ def follow(request, profile_user_id):
     return redirect('profile', profile_user_id=profile_user_id)
 
 
-@login_required()
 def unfollow(request, profile_user_id):
     follow = Follow.objects.get(from_user=request.user, to_user=profile_user_id)
     follow.delete()
@@ -70,7 +66,6 @@ def unfollow(request, profile_user_id):
     return redirect('profile', profile_user_id=profile_user_id)
 
 
-@login_required()
 def search_users(request):
     search_string = request.GET.get('search_string')
 
@@ -89,7 +84,6 @@ def search_users(request):
     )
 
 
-@login_required()
 def post_comment(request, photo_id):
     comment_text = request.POST.get('comment')
     photo = Photo.objects.get(id=photo_id)
@@ -127,18 +121,6 @@ class SignupView(SetRequestOnFormMixin, CreateView):
     form_class = UserCreationFormCustom
     template_name = 'registration/signup.html'
     success_url = reverse_lazy('home')
-
-
-
-# move signup.html to the templates/registration folder
-
-# create middleware to require login on all pages (except signup/login/logout)
-
-# add static assets
-    # include collecstatic command in README
-        # prob don't need this
-
-
 
 
 
