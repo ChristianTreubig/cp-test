@@ -22,4 +22,5 @@ img {
     height: 40em;
     display: inline-block;
     vertical-align: top;
+    background: linear-gradient(to bottom, sandybrown, rosybrown);
 }
