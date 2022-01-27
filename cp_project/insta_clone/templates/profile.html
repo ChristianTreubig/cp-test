@@ -3,9 +3,7 @@
 {% block content %}
     {% if request.user.id == profile_user.id %}
         <h2>My Profile</h2>
-        <div>
-            <a href="{% url 'photo_upload' %}">Upload a new photo</a>
-        </div>
+        <div><a href="{% url 'photo_upload' %}">Upload a new photo</a></div>
     {% else %}
         <h2>{{ profile_user.first_name }} {{ profile_user.last_name }} ({{ profile_user.username }})</h2>
         {% if request_user_follows_profile_user %}
@@ -27,8 +25,8 @@
         {% endif %}
     {% endif %}
 
-    <div>Following: {{ follow_counts.following }}</div>
-    <div>Followers: {{ follow_counts.followers }}</div>
+    <div style="margin-top: 1em;">Following: {{ follow_counts.following }}</div>
+    <div style="margin-bottom: 1em;">Followers: {{ follow_counts.followers }}</div>
 
     {% for photo in photos %}
         <div class="photo_container">
